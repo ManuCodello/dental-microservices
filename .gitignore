@@ -1,0 +1,22 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.spec
+
+# Entornos
+.venv/
+venv/
+env/
+ENV/
+
+# Bases de datos
+*.db
+
+# Variables de entorno
+.env
+
+# SO
+.DS_Store
+Thumbs.db
