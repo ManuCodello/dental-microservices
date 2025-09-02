@@ -1,9 +1,4 @@
-# Python
-__pycache__/
-*.py[cod]
-*.pyo
-*.pyd
-*.spec
+
 
 # Entornos
 .venv/

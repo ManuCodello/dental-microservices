@@ -1,147 +1,158 @@
-# Odontología Microservicios (Flask + JWT)
+# Odontología — Microservicios (Flask + JWT)
 
-Proyecto de referencia estilo MVC simplificado, con 5 microservicios independientes y un API Gateway. Cada servicio es una app Flask con su propia base de datos SQLite y validación por JWT. Arquitectura simple, escalable y con nombres/variables en español.
+Este repositorio contiene un ejemplo didáctico de microservicios desarrollados con Flask y protegidos mediante JWT. Incluye un API Gateway que enruta las solicitudes a 5 microservicios independientes.
 
 ## Arquitectura
 
-- API Gateway (puerto 5000)
-- Pacientes (5001)
-- Consultas (5002)
-- Facturación (5003)
-- Seguimiento (5004)
-- Notificaciones (5005)
+- API Gateway — puerto 5000
+- Pacientes — puerto 5001
+- Consultas — puerto 5002
+- Facturación — puerto 5003
+- Seguimiento — puerto 5004
+- Notificaciones — puerto 5005
 
-Cada microservicio incluye: `app.py`, `routes.py`, `models.py`, `utils.py`.
+Cada microservicio contiene los archivos principales: `app.py`, `routes.py`, `models.py`, `utils.py`.
 
 ## Requisitos
 
-- Python 3.10+
-- Pip
+- Python 3.10 o superior
+- pip
 
-## Instalación
+Es recomendable usar un entorno virtual para instalar dependencias.
 
-1) Clonar o copiar el proyecto.
+## Instalación rápida
 
-2) Crear y activar un entorno virtual (opcional pero recomendado):
+1. Clona el repositorio o descarga el código.
 
-- Windows (PowerShell):
-```
+2. Crea y activa un entorno virtual.
+
+PowerShell (Windows):
+
+```powershell
 python -m venv .venv
-.venv\\Scripts\\Activate.ps1
+.\.venv\Scripts\Activate.ps1
 ```
-- Linux/Mac:
-```
+
+Linux / macOS:
+
+```bash
 python3 -m venv .venv
 source .venv/bin/activate
 ```
 
-3) Instalar dependencias en la raíz del proyecto:
-```
+3. Instala dependencias desde la raíz del proyecto:
+
+```powershell
 pip install -r requirements.txt
 ```
 
-4) Variables de entorno
+## Variables de entorno
 
-- El API Gateway incluye un `.env` con `CLAVE_SECRETA` de ejemplo. Puedes cambiarla en `odontologia_microservicios/api_gateway/.env`.
-- Los microservicios leen la variable `CLAVE_SECRETA` del entorno si existe; si no, usan un valor por defecto (`super_secreto`).
+- El API Gateway incluye un archivo de ejemplo `.env.example` en `api_gateway/`.
+- La variable principal es `CLAVE_SECRETA` (utilizada para firmar JWT). Si no se define, los servicios pueden usar un valor por defecto interno.
+- No subas tu `.env` real al repositorio. `.gitignore` ya excluye `.env` y archivos `*.db`.
 
-## Ejecución
+## Ejecutar los servicios (modo manual)
 
-Abre 6 terminales (una por servicio) y ejecuta en cada carpeta el siguiente comando:
+Abre una terminal por cada servicio y ejecuta el siguiente comando desde la carpeta del servicio correspondiente.
 
-- API Gateway
-```
+Ejemplo (PowerShell):
+
+```powershell
+# En una terminal por servicio:
+cd api_gateway
 python app.py
 ```
 
-- Pacientes
-```
+```powershell
+cd pacientes
 python app.py
 ```
 
-- Consultas
-```
+```powershell
+cd consultas
 python app.py
 ```
 
-- Facturación
-```
+```powershell
+cd facturacion
 python app.py
 ```
 
-- Seguimiento
-```
+```powershell
+cd seguimiento
 python app.py
 ```
 
-- Notificaciones
-```
+```powershell
+cd notificaciones
 python app.py
 ```
 
-Nota: Ejecuta cada comando dentro de la carpeta correspondiente (`api_gateway/`, `pacientes/`, `consultas/`, `facturacion/`, `seguimiento/`, `notificaciones/`).
+Cada aplicación por defecto arranca en el puerto indicado en la sección "Arquitectura".
 
-## Generar token JWT de prueba
+Nota: si prefieres automatizar el arranque en Windows PowerShell puedes crear un script que abra varias ventanas y ejecute cada servicio (esto depende de tu flujo de trabajo). Para desarrollo local, varias pestañas de terminal funcionan bien.
 
-El API Gateway expone un endpoint para emitir un token de prueba:
+## Generar un token JWT de prueba
 
-```
-POST http://localhost:5000/auth/token
-Content-Type: application/json
+El API Gateway ofrece un endpoint para obtener un token de prueba (ver `api_gateway/routes.py` si necesitas adaptar los datos de usuario):
 
-{
-  "usuario": "demo"
-}
-```
+Ejemplo de petición (curl):
 
-Respuesta:
-```
-{
-  "token": "<JWT>"
-}
+```bash
+curl -X POST http://localhost:5000/auth/token -H "Content-Type: application/json" -d '{"usuario":"demo"}'
 ```
 
-## Probar endpoints (vía Gateway)
+Respuesta esperada:
 
-- Crear paciente:
-```
-POST http://localhost:5000/pacientes/pacientes
-Authorization: Bearer <JWT>
-Content-Type: application/json
-
-{
-  "nombre": "Juan Perez",
-  "edad": 30
-}
+```json
+{ "token": "<JWT>" }
 ```
 
-- Listar pacientes:
-```
-GET http://localhost:5000/pacientes/pacientes
-Authorization: Bearer <JWT>
-```
+Usa ese token en la cabecera `Authorization: Bearer <JWT>` al consumir los endpoints protegidos.
 
-- Listar consultas:
-```
-GET http://localhost:5000/consultas/consultas
-Authorization: Bearer <JWT>
-```
+## Endpoints de ejemplo (vía API Gateway)
 
-- Crear factura:
-```
-POST http://localhost:5000/facturacion/facturas
-Authorization: Bearer <JWT>
-Content-Type: application/json
+- Crear paciente
 
-{
-  "paciente_id": 1,
-  "monto": 1500.0,
-  "estado": "pendiente"
-}
-```
+  POST http://localhost:5000/pacientes/pacientes
+  Headers: Authorization: Bearer <JWT>, Content-Type: application/json
 
-## Notas
+  Body ejemplo:
+  ```json
+  { "nombre": "Juan Perez", "edad": 30 }
+  ```
 
-- Las bases de datos SQLite se crean automáticamente en el primer arranque de cada microservicio.
-- `.gitignore` excluye `.env` y `*.db`.
-- Este proyecto es didáctico; para producción considera: logging centralizado, health checks, rate limiting, retries, circuit breaker, monitorización, y despliegue contenedorizado.
+- Listar pacientes
+
+  GET http://localhost:5000/pacientes/pacientes
+  Headers: Authorization: Bearer <JWT>
+
+- Listar consultas
+
+  GET http://localhost:5000/consultas/consultas
+  Headers: Authorization: Bearer <JWT>
+
+- Crear factura
+
+  POST http://localhost:5000/facturacion/facturas
+  Headers: Authorization: Bearer <JWT>, Content-Type: application/json
+
+  Body ejemplo:
+  ```json
+  { "paciente_id": 1, "monto": 1500.0, "estado": "pendiente" }
+  ```
+
+## Notas y recomendaciones
+
+- Cada microservicio crea su propia base de datos SQLite en el primer arranque.
+- Este proyecto es una base para aprendizaje. Para producción considera añadir: pruebas automatizadas, logging centralizado, health checks, contenedores (Docker), y orquestación.
+
+## Siguientes pasos sugeridos
+
+- Añadir un script de arranque (PowerShell o Makefile) para ejecutar todos los servicios en desarrollo.
+- Añadir tests unitarios e integración para los endpoints principales.
+- Contenerizar cada servicio con Docker y preparar un docker-compose para desarrollo.
+
+---
+
