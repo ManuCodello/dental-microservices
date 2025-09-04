@@ -27,7 +27,7 @@ def inicializar_bd():
     con.close()
 
 
-def validar_token(req: request) -> bool: 
+def validar_token(req: request) -> bool:
     auth = req.headers.get("Authorization")
     if not auth:
         return False
