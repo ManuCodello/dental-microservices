@@ -2,9 +2,8 @@
 
 # Entornos
 .venv/
-venv/
-env/
-ENV/
+
+.env
 
 # Bases de datos
 *.db

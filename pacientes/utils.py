@@ -4,12 +4,13 @@ import jwt
 from flask import request
 from dotenv import load_dotenv
 from typing import Optional
-#codigo importante 
+
+# codigo importante
 BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 ENV_PATH = os.path.join(BASE_DIR, "api_gateway", ".env")
 load_dotenv(dotenv_path=ENV_PATH)
 
-CLAVE_SECRETA = os.getenv("CLAVE_SECRETA")
+CLAVE_SECRETA = os.getenv("CLAVE_SECRETA", "super_secreto")
 NOMBRE_BD = "pacientes.db"
 
 
@@ -33,7 +34,6 @@ def inicializar_bd() -> None:
 
 def validar_token(req: request) -> bool:
     auth = req.headers.get("Authorization")
-    print(auth)
     if not auth:
         return False
     try:
@@ -41,9 +41,10 @@ def validar_token(req: request) -> bool:
         if len(partes) != 2 or partes[0].lower() != "bearer":
             return False
         token = partes[1]
-        print(token)
-        print(CLAVE_SECRETA)
         jwt.decode(token, CLAVE_SECRETA, algorithms=["HS256"])  # valida firma/exp
+        return True
+    except Exception:
+        return False
         return True
     except Exception:
         return False

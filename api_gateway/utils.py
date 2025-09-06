@@ -2,7 +2,8 @@ import os
 from dotenv import load_dotenv
 import jwt
 
-load_dotenv()
+ENV_PATH = os.path.join(os.path.dirname(__file__), ".env")
+load_dotenv(dotenv_path=ENV_PATH)
 
 CLAVE_SECRETA = os.getenv("CLAVE_SECRETA", "super_secreto")
 

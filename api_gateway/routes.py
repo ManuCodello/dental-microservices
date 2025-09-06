@@ -59,7 +59,7 @@ def proxy(servicio, endpoint):
     except ValueError:
         cuerpo = {"texto": response.text}
     return jsonify(cuerpo), response.status_code
- 
+
 
 def _headers_a_encaminar():
     # Encaminamos Authorization por si los servicios también verifican
