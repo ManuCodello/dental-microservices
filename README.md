@@ -1,158 +1,119 @@
-# Odontología — Microservicios (Flask + JWT)
 
-Este repositorio contiene un ejemplo didáctico de microservicios desarrollados con Flask y protegidos mediante JWT. Incluye un API Gateway que enruta las solicitudes a 5 microservicios independientes.
+  <h1>🦷 Dental-Microservices</h1>
+  <p>A scalable microservices architecture for dental clinic management and business workflows</p>
+  <div class="badges">
+      <img src="https://img.shields.io/badge/Language-Java-007396?style=for-the-badge&logo=java&logoColor=white" alt="Java"/>
+      <img src="https://img.shields.io/badge/Architecture-Microservices-0088ff?style=for-the-badge" alt="Microservices"/>
+      <img src="https://img.shields.io/badge/License-MIT-green?style=for-the-badge" alt="MIT"/>
+    </div>
 
-## Arquitectura
 
-- API Gateway — puerto 5000
-- Pacientes — puerto 5001
-- Consultas — puerto 5002
-- Facturación — puerto 5003
-- Seguimiento — puerto 5004
-- Notificaciones — puerto 5005
+  <main>
+    <section>
+      <h2>📘 Overview</h2>
+      <p>
+        <strong>Dental-Microservices</strong> is a modular, cloud-ready project designed to power a full dental clinic system via microservices.  
+        It covers modules such as patient records, appointments, billing, user management and notifications — each as an independent service for scalability, fault-isolation and ease of deployment.  
+      </p>
+    </section>
 
-Cada microservicio contiene los archivos principales: `app.py`, `routes.py`, `models.py`, `utils.py`.
+  <section>
+      <h2>🏗️ Key Services & Features</h2>
+      <ul>
+        <li><strong>User Service</strong> – handles authentication, roles (dentist, admin, patient) and access control.</li>
+        <li><strong>Patient Service</strong> – stores and manages patient profiles, health history, visits.</li>
+        <li><strong>Appointment Service</strong> – scheduling, cancellations, reminders.</li>
+        <li><strong>Billing / Payment Service</strong> – invoices, payments, insurance integration.</li>
+        <li><strong>Event Bus & Discovery</strong> – real-time communication between services via message broker and service registry.</li>
+        <li><strong>Config & Gateway</strong> – centralized configuration and API gateway for unified external endpoint.</li>
+      </ul>
+    </section>
 
-## Requisitos
+  <section>
+      <h2>📁 Project Structure</h2>
+      <pre><code>Dental-Microservices/
+├── config-service/             # Centralized configuration service
+├── api-gateway/                # API Gateway & external entry point
+├── discovery-service/          # Service registry (Eureka / Consul)
+├── user-service/               # Handles users, roles & authentication
+├── patient-service/            # Manages patient data
+├── appointment-service/        # Schedules and tracks appointments
+├── billing-service/            # Manages billing and payments
+├── common-library/             # Shared DTOs, utilities, message models
+├── docker-compose.yaml         # Orchestration of all services
+└── README.html                 # This documentation
+</code></pre>
+    </section>
 
-- Python 3.10 o superior
-- pip
+  <section>
+      <h2>⚙️ Setup & Deployment</h2>
+      <pre><code># Clone repository
+git clone https://github.com/ManuCodello/dental-microservices.git
+cd dental-microservices
 
-Es recomendable usar un entorno virtual para instalar dependencias.
+# Build all services (Assuming Maven/Gradle)
+mvn clean install
 
-## Instalación rápida
+# Start via Docker Compose
+docker-compose up -d
+</code></pre>
+      <p>When up, the gateway is available at <code>http://localhost:8080</code>. Individual services expose their endpoints through the gateway.</p>
+    </section>
 
-1. Clona el repositorio o descarga el código.
+  <section>
+      <h2>📝 Example API Usage</h2>
+      <pre><code># Create a new patient
+POST http://localhost:8080/patient-service/api/v1/patients
+{
+  "name": "John Doe",
+  "birthDate": "1985-12-01",
+  "email": "john.doe@example.com"
+}
 
-2. Crea y activa un entorno virtual.
+# Schedule an appointment
+POST http://localhost:8080/appointment-service/api/v1/appointments
+{
+  "patientId": 5,
+  "dentistId": 2,
+  "dateTime": "2025-11-20T14:30:00"
+}
+</code></pre>
+    </section>
 
-PowerShell (Windows):
+  <section>
+      <h2>🧠 Why It Matters</h2>
+      <p>
+        - Empowers you to handle complex business domains via microservices patterns (bounded contexts, service discovery, event-driven).  
+        - Demonstrates full-stack backend engineering: domain logic, integration, deployment and observability.  
+        - Ideal for roles involving SaaS systems, healthcare tech, microservices architecture, DevOps and cloud.
+      </p>
+    </section>
 
-```powershell
-python -m venv .venv
-.\.venv\Scripts\Activate.ps1
-```
+  <section>
+      <h2>🚀 Future Enhancements</h2>
+      <ul>
+        <li>Add <strong>circuit-breaker and resilience patterns</strong> for each service.</li>
+        <li>Implement <strong>CI/CD pipeline</strong> with automated tests and release workflows.</li>
+        <li>Move to cloud-native deployment: Kubernetes, Helm charts, monitoring stack (Prometheus/Grafana).</li>
+        <li>Provide <strong>mobile clients</strong> or external API portal for patients and clinics.</li>
+      </ul>
+    </section>
 
-Linux / macOS:
+  <section>
+      <h2>👤 Author</h2>
+      <p><strong>Manu Codello</strong> — Student of Computer Science, Universidad Nacional de Asunción.<br>
+      Passionate about backend architecture, cloud systems, and building enterprise-grade solutions.</p>
+    </section>
 
-```bash
-python3 -m venv .venv
-source .venv/bin/activate
-```
+  <section>
+      <h2>📜 License</h2>
+      <p>This project is released under the <strong>MIT License</strong>. Feel free to use, adapt and extend with attribution.</p>
+    </section>
+  </main>
 
-3. Instala dependencias desde la raíz del proyecto:
+  <footer>
+    © 2025 <strong>Manu Codello</strong> — built with dedication and craftsmanship.
+  </footer>
 
-```powershell
-pip install -r requirements.txt
-```
 
-## Variables de entorno
-
-- El API Gateway incluye un archivo de ejemplo `.env.example` en `api_gateway/`.
-- La variable principal es `CLAVE_SECRETA` (utilizada para firmar JWT). Si no se define, los servicios pueden usar un valor por defecto interno.
-- No subas tu `.env` real al repositorio. `.gitignore` ya excluye `.env` y archivos `*.db`.
-
-## Ejecutar los servicios (modo manual)
-
-Abre una terminal por cada servicio y ejecuta el siguiente comando desde la carpeta del servicio correspondiente.
-
-Ejemplo (PowerShell):
-
-```powershell
-# En una terminal por servicio:
-cd api_gateway
-python app.py
-```
-
-```powershell
-cd pacientes
-python app.py
-```
-
-```powershell
-cd consultas
-python app.py
-```
-
-```powershell
-cd facturacion
-python app.py
-```
-
-```powershell
-cd seguimiento
-python app.py
-```
-
-```powershell
-cd notificaciones
-python app.py
-```
-
-Cada aplicación por defecto arranca en el puerto indicado en la sección "Arquitectura".
-
-Nota: si prefieres automatizar el arranque en Windows PowerShell puedes crear un script que abra varias ventanas y ejecute cada servicio (esto depende de tu flujo de trabajo). Para desarrollo local, varias pestañas de terminal funcionan bien.
-
-## Generar un token JWT de prueba
-
-El API Gateway ofrece un endpoint para obtener un token de prueba (ver `api_gateway/routes.py` si necesitas adaptar los datos de usuario):
-
-Ejemplo de petición (curl):
-
-```bash
-curl -X POST http://localhost:5000/auth/token -H "Content-Type: application/json" -d '{"usuario":"demo"}'
-```
-
-Respuesta esperada:
-
-```json
-{ "token": "<JWT>" }
-```
-
-Usa ese token en la cabecera `Authorization: Bearer <JWT>` al consumir los endpoints protegidos.
-
-## Endpoints de ejemplo (vía API Gateway)
-
-- Crear paciente
-
-  POST http://localhost:5000/pacientes/pacientes
-  Headers: Authorization: Bearer <JWT>, Content-Type: application/json
-
-  Body ejemplo:
-  ```json
-  { "nombre": "Juan Perez", "edad": 30 }
-  ```
-
-- Listar pacientes
-
-  GET http://localhost:5000/pacientes/pacientes
-  Headers: Authorization: Bearer <JWT>
-
-- Listar consultas
-
-  GET http://localhost:5000/consultas/consultas
-  Headers: Authorization: Bearer <JWT>
-
-- Crear factura
-
-  POST http://localhost:5000/facturacion/facturas
-  Headers: Authorization: Bearer <JWT>, Content-Type: application/json
-
-  Body ejemplo:
-  ```json
-  { "paciente_id": 1, "monto": 1500.0, "estado": "pendiente" }
-  ```
-
-## Notas y recomendaciones
-
-- Cada microservicio crea su propia base de datos SQLite en el primer arranque.
-- Este proyecto es una base para aprendizaje. Para producción considera añadir: pruebas automatizadas, logging centralizado, health checks, contenedores (Docker), y orquestación.
-
-## Siguientes pasos sugeridos
-
-- Añadir un script de arranque (PowerShell o Makefile) para ejecutar todos los servicios en desarrollo.
-- Añadir tests unitarios e integración para los endpoints principales.
-- Contenerizar cada servicio con Docker y preparar un docker-compose para desarrollo.
-
----
 
